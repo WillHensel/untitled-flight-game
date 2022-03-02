@@ -1,0 +1,87 @@
+Exporter version: 2.93.5, Blender version: 2.93.8
+========= Conversion from Blender to Babylon.js =========
+	Scene settings used :
+		Inline textures     :  false
+		Material Type       :  PBR
+		Positions Precision :  4
+		Normals Precision   :  3
+		UVs Precision       :  3
+		Vert Color Precision:  3
+		Mat Weight Precision:  2
+		Keep Z-up r-handed  :  no
+		Texture directory   :  /home/will/Documents/FInal Project/Piper/
+	Python World class constructor completed
+	WARNING: No active camera has been assigned, or is not in a currently enabled collection
+	processing begun of mesh:  Body
+		processing begun of material:  Tire Black
+		processing begun of material:  Piper Yellow
+		processing begun of multimaterial:  Piper_J3.Multimaterial#0
+		Custom split normals with tangents being used
+		num positions      :  5912
+		num normals        :  5912
+		num tangents       :  23648
+		num uvs            :  11824
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  2259
+	processing begun of mesh:  Elevator
+		processing begun of material:  Piper Yellow
+		registered as also a user of material:  Piper Yellow
+		num positions      :  124
+		num normals        :  124
+		num tangents       :  0
+		num uvs            :  248
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  48
+	processing begun of mesh:  Prop
+		processing begun of material:  Prop Wood
+		num positions      :  108
+		num normals        :  108
+		num tangents       :  0
+		num uvs            :  216
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  36
+	processing begun of mesh:  Rutter
+		processing begun of material:  Piper Yellow
+		registered as also a user of material:  Piper Yellow
+		num positions      :  127
+		num normals        :  127
+		num tangents       :  0
+		num uvs            :  254
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  60
+	processing begun of mesh:  Aileron-Pilot
+		processing begun of material:  Piper Yellow
+		registered as also a user of material:  Piper Yellow
+		Custom split normals with tangents being used
+		num positions      :  22
+		num normals        :  22
+		num tangents       :  88
+		num uvs            :  44
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  8
+	processing begun of mesh:  Aileron-Pass
+		processing begun of material:  Piper Yellow
+		registered as also a user of material:  Piper Yellow
+		Custom split normals with tangents being used
+		num positions      :  24
+		num normals        :  24
+		num tangents       :  96
+		num uvs            :  48
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  8
+========= Writing of JSON file started =========
+	writing mesh:  Body
+	writing mesh:  Elevator
+	writing mesh:  Prop
+	writing mesh:  Rutter
+	writing mesh:  Aileron-Pilot
+	writing mesh:  Aileron-Pass
+========= Writing of JSON file completed =========
+========= end of processing =========
+elapsed time:  0 min, 0.1854 secs
