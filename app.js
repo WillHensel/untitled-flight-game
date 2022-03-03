@@ -2,19 +2,21 @@ var canvas = null;
 var engine = null;
 
 function createScene() {
-    let scene, camera, light, ground, piperBody;
+    let scene, camera, light, piperBody;
 
     function setupScene() {
         scene = new BABYLON.Scene(engine);
     }
     function setupCamera() {
         console.log("At start setupCamera");
-        // camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 5, -20), scene);
-        // camera.radius = 10;
-        camera = new BABYLON.ArcRotateCamera("ArcRotateCam", 0, 0, 20, BABYLON.Vector3(0,0,0), scene);
-
+        camera = new BABYLON.FollowCamera("FollowCam", new BABYLON.Vector3(0, 10, -20), scene);
+        camera.radius = 20;
+        camera.rotationOffset = 0;
+        camera.heightOffset = 1;
+        camera.cameraAcceleration = .1;
+        camera.maxCameraSpeed = 10;
         camera.attachControl(canvas, true);
-        // camera.lockedTarget = piperBody;
+        
 
     }
     function setupLights() {
@@ -26,16 +28,6 @@ function createScene() {
 
         light2 = new BABYLON.HemisphericLight("HemisphericLight", new BABYLON.Vector3(1, 1, 0), scene);
         light2.intensity = 0.4
-    }
-    function setupGround() {
-        var noiseTexture = new BABYLON.NoiseProceduralTexture("perlin", 256, scene);
-        let whiteMat = new BABYLON.StandardMaterial("whiteMat", scene);
-        whiteMat.diffuseColor = new BABYLON.Color3(0,0.3, 0.05);
-        whiteMat.diffuseTexture = noiseTexture;
-        whiteMat.ambientColor = new BABYLON.Color3(0,0.3, 0.05);
-
-        ground = BABYLON.MeshBuilder.CreateGround("ground", { width: 50, height: 50 }, scene);
-        ground.material = whiteMat;
     }
     function setupOrientationLines() {
         let xLine = BABYLON.MeshBuilder.CreateLines("xLine", {
@@ -67,7 +59,7 @@ function createScene() {
             piperAileronPass.translate(new BABYLON.Vector3(1.75, -0.4, 0), 1, BABYLON.Space.WORLD);
            
             piperBody.addRotation(0, Math.PI / 2, -Math.PI / 15);
-            piperBody.translate(new BABYLON.Vector3(0, 0.9, 2), BABYLON.Space.WORLD);
+            piperBody.translate(new BABYLON.Vector3(0, 10 + 0.9, 2), BABYLON.Space.WORLD);
         }
 
         function setupPropAnimation() {
@@ -78,6 +70,14 @@ function createScene() {
                 }
                 piperProp.rotation = new BABYLON.Vector3(rotation * Math.PI, 0, 0);
                 rotation += 0.2;
+
+                piperBody.translate(new BABYLON.Vector3(-1, 0, 0), 1, BABYLON.Space.LOCAL);
+                if (piperBody.rotation.x < 0) {
+                    piperBody.addRotation(0, -0.0001, -0.0001);
+                }
+                if (piperBody.rotation.x > 0) {
+                    piperBody.addRotation(0, 0.0001, -0.001);
+                }
             });
         }
 
@@ -88,6 +88,7 @@ function createScene() {
             let elevatorRotationCounter = 0;
             let rutterRotationCounter = 0;
             let aileronRotationCounter = 0;
+
             scene.onKeyboardObservable.add((kbInfo) => {
                 switch (kbInfo.type) {
                     case BABYLON.KeyboardEventTypes.KEYDOWN:
@@ -96,6 +97,7 @@ function createScene() {
                             case "W":
                                 if (elevatorRotationCounter > -rotationLimit) {
                                     piperElevator.addRotation(0, 0, -rotationOffset);
+                                    piperBody.addRotation(0, 0, rotationOffset);
                                     elevatorRotationCounter -= rotationOffset;
                                 }
 
@@ -104,6 +106,7 @@ function createScene() {
                             case "S":
                                 if (elevatorRotationCounter < rotationLimit) {
                                     piperElevator.addRotation(0, 0, rotationOffset);
+                                    piperBody.addRotation(0, 0, -rotationOffset);
                                     elevatorRotationCounter += rotationOffset;
                                 }
                                 break;
@@ -126,6 +129,7 @@ function createScene() {
                                 if (aileronRotationCounter < rotationLimit) {
                                     piperAileronPilot.addRotation(0, 0, rotationOffset);
                                     piperAileronPass.addRotation(0, 0, -rotationOffset);
+                                    piperBody.addRotation(-rotationOffset, 0, 0);
                                     aileronRotationCounter += rotationOffset
 
                                 }
@@ -135,8 +139,8 @@ function createScene() {
                                 if (aileronRotationCounter > -rotationLimit) {
                                     piperAileronPilot.addRotation(0, 0, -rotationOffset);
                                     piperAileronPass.addRotation(0, 0, rotationOffset);
+                                    piperBody.addRotation(rotationOffset, 0, 0);
                                     aileronRotationCounter -= rotationOffset
-
                                 }
                                 break;
                         }
@@ -177,17 +181,20 @@ function createScene() {
             setupInitialTranslations();
             setupPropAnimation();
             setupControlSurfaceInput();
+
+            camera.lockedTarget = piperBody;
         });
     }
 
     function generateTerrain() {
         let mapSubX = 1000;
         let mapSubZ = 1000;
-        let seed = 0.1;
-        let noiseScale = 0.03;
-        let elevationScale = 15.0;
+        let seed = 0.1;d
+        let noiseScale = 0.001;
+        let elevationScale = 150.0;
         noise.seed(seed);
         let mapData = new Float32Array(mapSubX * mapSubZ * 3);
+        let mapColors = new Float32Array(mapSubX * mapSubZ * 3); 
         for (let i = 0; i < mapSubZ; i++) {
             for (let j = 0; j < mapSubX; j++) {
                 let x = (j - mapSubX * 0.5) * 5.0;
@@ -204,23 +211,42 @@ function createScene() {
                 mapData[xPos] = x;
                 mapData[xPos + 1] = y;
                 mapData[xPos + 2] = z;
+
+                if(y < 10) {
+                    mapColors[xPos] = 0.04;     
+                    mapColors[xPos + 1] = 0.20; 
+                    mapColors[xPos + 2] = 0.0;    
+                }
+                else if(y < 50) {
+                    mapColors[xPos] = 0.4;     
+                    mapColors[xPos + 1] = 0.27;
+                    mapColors[xPos + 2] = 0.0;    
+                } else {
+                    mapColors[xPos] = 0.90;     
+                    mapColors[xPos + 1] = 1.00; 
+                    mapColors[xPos + 2] = 1.00;    
+                }
+
             }
         }
 
 
-        let terrainSub = 100;
+        let terrainSub = 50;
         let params = {
             mapData: mapData,
             mapSubX: mapSubX,
             mapSubZ: mapSubZ,
+            mapColors: mapColors,
             terrainSub: terrainSub
         }
         let terrain = new BABYLON.DynamicTerrain("Terrain", params, scene);
 
         let terrainMaterial = new BABYLON.StandardMaterial("TerrainMaterial", scene);
-        terrainMaterial.diffuseColor = BABYLON.Color3.Green();
-        terrainMaterial.wireframe = true;
+        terrainMaterial.specularColor = BABYLON.Color3.Black();
         terrain.mesh.material = terrainMaterial;
+
+        terrain.initialLOD = 100;
+        terrain.update(true);
 
     }
 
@@ -228,7 +254,6 @@ function createScene() {
     importMeshes();
     setupCamera();
     setupLights();
-    // setupGround();
     setupOrientationLines();
     generateTerrain();
 
