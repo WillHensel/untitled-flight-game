@@ -2,7 +2,7 @@ var canvas = null;
 var engine = null;
 
 async function createScene() {
-    let scene, camera, light, piperBody;
+    let scene, camera, light, piperBody, skybox, shadowGenerator;
 
     function setupScene() {
         scene = new BABYLON.Scene(engine);
@@ -21,14 +21,16 @@ async function createScene() {
     }
 
     function setupLights() {
-        light = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(-1, -1, 0), scene);
+        light = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, -1), scene);
         // light.diffuse = new BABYLON.Color3(1, 1, 1);
         // light.specular = new BABYLON.Color3(1, 1, 1);
-        light.intensity = 5;
+        light.intensity = 7;
         light.position = new BABYLON.Vector3(0, 100, 10);
 
-        // light2 = new BABYLON.HemisphericLight("HemisphericLight", new BABYLON.Vector3(1, 1, 0), scene);
-        // light2.intensity = 0.1;
+        light2 = new BABYLON.HemisphericLight("HemisphericLight", new BABYLON.Vector3(1, 1, 0), scene);
+        light2.intensity = 0.5;
+
+        shadowGenerator = new BABYLON.ShadowGenerator(1024, light);
     }
 
     async function importAndSetupPiper() {
@@ -55,7 +57,7 @@ async function createScene() {
             piperPositionLightTail.translate(new BABYLON.Vector3(1.75, -0.4, 0), 1, BABYLON.Space.WORLD);
            
             piperBody.addRotation(0, Math.PI / 2, -Math.PI / 15);
-            piperBody.translate(new BABYLON.Vector3(0, 50, 2), BABYLON.Space.WORLD);
+            piperBody.translate(new BABYLON.Vector3(0, 20, 2), BABYLON.Space.WORLD);
         }
 
         function setupLights() {
@@ -74,6 +76,8 @@ async function createScene() {
             positionLightRedWing.parent = piperPositionLightLeft;
             positionLightGreen.parent = piperPositionLightRight;
             positionLightRedTail.parent = piperPositionLightTail;
+
+            shadowGenerator.getShadowMap().renderList.push(piperBody);
         }
 
         function setupAnimations() {
@@ -88,6 +92,7 @@ async function createScene() {
                 cameraAttachment.position = piperBody.position;
 
                 piperBody.translate(new BABYLON.Vector3(-1, 0, 0), 1, BABYLON.Space.LOCAL);
+                skybox.position = piperBody.position;
             });
        }
 
@@ -206,7 +211,7 @@ async function createScene() {
         cameraAttachment.isVisible = false;
 
         camera.lockedTarget = cameraAttachment;
-        camera.rotationOffset = 90;
+        camera.rotationOffset = 180;
 
         piperBody.checkCollisions = true;
 
@@ -283,7 +288,9 @@ async function createScene() {
         terrainMaterial.diffuseTexture = terrainTexture;
 
         terrain.initialLOD = 10;
-        terrain.checkCollisions = true;
+        terrain.mesh.checkCollisions = true;
+        terrain.receiveShadows = true
+        console.log(terrain.mesh);
         terrain.update(true);
 
     }
@@ -306,33 +313,24 @@ async function createScene() {
     }
 
     function setupSkybox() {
-        let skybox = new BABYLON.MeshBuilder.CreateBox("Skybox", {size: 4096}, scene);
-        let skyboxMaterial = new BABYLON.StandardMaterial("Skybox material", scene);
-        skyboxMaterial.backFaceCulling = false;
-        skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("textures/clouds", scene);
-        skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
-        skyboxMaterial.diffuseColor = new BABYLON.Color3(0, 0, 0);
-        skyboxMaterial.specularColor = new BABYLON.Color3(0, 0, 0);
-        skybox.material = skyboxMaterial;
-
-        skybox.parent = piperBody;
-    }
-
-    function setupGround() {
-        let ground = BABYLON.MeshBuilder.CreateGroundFromHeightMap("GroundHeightMap", "textures/height-map.png", {width: 2048, height: 40960, subdivisions: 10, maxHeight: 2000, updatable:true});
-        ground.position.z += 20480;
+        let skyMaterial = new BABYLON.SkyMaterial("SkyMaterial", scene);
+        skyMaterial.backFaceCulling = false;
+        skyMaterial.inclination = -0.5;
+        // skyMaterial.cameraOffset.y = 0;
+        skybox = BABYLON.Mesh.CreateBox("skyBox", 3000.0, scene);
+        skybox.material = skyMaterial;
+        skybox.addRotation(0, Math.PI / 2, 0);
     }
 
     setupScene();
     setupCamera();
     setupLights();
     generateTerrain();
-    // setupGround();
 
-
+    setupSkybox();
     await importAndSetupPiper();
-    // setupSkybox();
-    setupParticles();
+    
+    // setupParticles();
 
 
 
