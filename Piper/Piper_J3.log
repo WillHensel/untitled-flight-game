@@ -75,6 +75,43 @@ Exporter version: 2.93.5, Blender version: 2.93.8
 		num uvs2           :  0
 		num colors         :  0
 		num triangles      :  8
+	processing begun of mesh:  Position Light Green
+		processing begun of material:  Position Light Green
+		num positions      :  2607
+		num normals        :  2607
+		num tangents       :  0
+		num uvs            :  5214
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  960
+	processing begun of mesh:  Position Light Red
+		processing begun of material:  Position Light Red
+		num positions      :  2607
+		num normals        :  2607
+		num tangents       :  0
+		num uvs            :  5214
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  960
+	processing begun of mesh:  Position Light Tail
+		processing begun of material:  Position Light Red
+		registered as also a user of material:  Position Light Red
+		num positions      :  2607
+		num normals        :  2607
+		num tangents       :  0
+		num uvs            :  5214
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  960
+	processing begun of mesh:  Physics Imposter
+		WARNING: No materials have been assigned: 
+		num positions      :  29
+		num normals        :  29
+		num tangents       :  0
+		num uvs            :  58
+		num uvs2           :  0
+		num colors         :  0
+		num triangles      :  12
 ========= Writing of JSON file started =========
 	writing mesh:  Body
 	writing mesh:  Elevator
@@ -82,6 +119,10 @@ Exporter version: 2.93.5, Blender version: 2.93.8
 	writing mesh:  Rutter
 	writing mesh:  Aileron-Pilot
 	writing mesh:  Aileron-Pass
+	writing mesh:  Position Light Green
+	writing mesh:  Position Light Red
+	writing mesh:  Position Light Tail
+	writing mesh:  Physics Imposter
 ========= Writing of JSON file completed =========
 ========= end of processing =========
-elapsed time:  0 min, 0.1854 secs
+elapsed time:  0 min, 0.5788 secs
