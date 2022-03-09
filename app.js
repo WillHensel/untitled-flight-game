@@ -22,9 +22,9 @@ async function createScene() {
 
     function setupLights() {
         light = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(-1, -1, 0), scene);
-        light.diffuse = new BABYLON.Color3(1, 1, 1);
-        light.specular = new BABYLON.Color3(1, 1, 1);
-        light.intensity = 0.5;
+        // light.diffuse = new BABYLON.Color3(1, 1, 1);
+        // light.specular = new BABYLON.Color3(1, 1, 1);
+        light.intensity = 5;
         light.position = new BABYLON.Vector3(0, 100, 10);
 
         // light2 = new BABYLON.HemisphericLight("HemisphericLight", new BABYLON.Vector3(1, 1, 0), scene);
@@ -217,11 +217,11 @@ async function createScene() {
     }
 
     function generateTerrain() {
-        let mapSubX = 2000;
-        let mapSubZ = 2000;
-        let seed = 0.1;
-        let noiseScale = 0.001;
-        let elevationScale = 250.0;
+        let mapSubX = 1000;
+        let mapSubZ = 1000;
+        let seed = 0.3;
+        let noiseScale = 0.003;
+        let elevationScale = 60.0;
         noise.seed(seed);
         let mapData = new Float32Array(mapSubX * mapSubZ * 3);
         let mapColors = new Float32Array(mapSubX * mapSubZ * 3); 
@@ -243,14 +243,14 @@ async function createScene() {
                 mapData[xPos + 2] = z;
 
                 if(y < 10) {
-                    mapColors[xPos] = 0.04;     
-                    mapColors[xPos + 1] = 0.20; 
-                    mapColors[xPos + 2] = 0.0;    
+                    mapColors[xPos] = 0.8;     
+                    mapColors[xPos + 1] = 1; 
+                    mapColors[xPos + 2] = 0.6;    
                 }
                 else if(y < 130) {
-                    mapColors[xPos] = 0.4;     
-                    mapColors[xPos + 1] = 0.27;
-                    mapColors[xPos + 2] = 0.0;    
+                    mapColors[xPos] = 0.7;     
+                    mapColors[xPos + 1] = 0.51;
+                    mapColors[xPos + 2] = 0.29;    
                 } 
                 else {
                     mapColors[xPos] = 0.90;     
@@ -275,8 +275,14 @@ async function createScene() {
         let terrainMaterial = new BABYLON.StandardMaterial("TerrainMaterial", scene);
         terrainMaterial.specularColor = BABYLON.Color3.Black();
         terrain.mesh.material = terrainMaterial;
+        terrainMaterial.diffuseColor = new BABYLON.Color3(0.8, 1, 0.6);
+        terrainMaterial.specularColor = new BABYLON.Color3(0.01, 0.02, 0.005);
+        terrainMaterial.ambientColor = new BABYLON.Color3(0.8, 1, 0.6);
 
-        terrain.initialLOD = 50;
+        let terrainTexture = new BABYLON.Texture('textures/grass.png',scene);
+        terrainMaterial.diffuseTexture = terrainTexture;
+
+        terrain.initialLOD = 10;
         terrain.checkCollisions = true;
         terrain.update(true);
 
