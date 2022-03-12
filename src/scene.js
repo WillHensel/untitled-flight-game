@@ -1,5 +1,10 @@
+// timeSelected: Time selected through GUI, defaults to real time when the game launches.
+// timeNow: Time selected + amount of time passed since selection was made.
+//          Should be zeroed when a change is made to timeSelected.
+let timeSelected, timeNow;
+
 async function createScene() {
-    let scene, camera, shadowGenerator;
+    let scene, camera, shadowGenerator
 
     function setupScene() {
         scene = new BABYLON.Scene(engine);
@@ -33,11 +38,27 @@ async function createScene() {
         });
     }
 
+    function setupInternalClock() {
+        timeSelected = +new Date();
+        timeNow = timeSelected;
+        let timeStarted = +new Date();
+        scene.registerBeforeRender(function() {
+            let delta = +new Date() - timeStarted;
+            if (delta >= 1000) {
+                timeNow = timeSelected + delta;
+            }        
+        });
+
+    }
+
+    
     setupScene();
+    setupInternalClock();
     setupCamera();
     setupEnvironment(scene);
     piperBody = await importAndSetupPiper(scene, camera);
     setupPiperMovement();
+    setupUI();
 
     return scene;
 };

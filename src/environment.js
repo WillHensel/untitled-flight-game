@@ -1,5 +1,7 @@
 
 function setupEnvironment(scene) {
+    let directionalLight, skyMaterial
+
     function generateTerrain() {
         let mapSubX = 1000;
         let mapSubZ = 1000;
@@ -74,30 +76,60 @@ function setupEnvironment(scene) {
     }
 
     function setupSkybox() {
-        let skyMaterial = new BABYLON.SkyMaterial("SkyMaterial", scene);
+        skyMaterial = new BABYLON.SkyMaterial("SkyMaterial", scene);
         skyMaterial.backFaceCulling = false;
-        skyMaterial.inclination = -0.1;
-        // skyMaterial.cameraOffset.y = 0;
         let skybox = BABYLON.Mesh.CreateBox("skyBox", 3000.0, scene);
         skybox.material = skyMaterial;
         skybox.addRotation(0, Math.PI / 2, 0);
 
         scene.registerBeforeRender(function() {
+            let dateTimeNow = new Date(timeNow);
+            let x = dateTimeNow.getHours() + dateTimeNow.getMinutes() / 60;
+            let evening = false;
+            if (x > 12) {
+                x = -1 * (x - 12);
+                evening = true;
+            } 
+            x = x / 12;
+            if (!evening) {
+                x = 1 - x;
+            }
+            skyMaterial.inclination = x;
             skybox.position = piperBody.position;
         });
     }
 
     function setupLights() {
-        let light1 = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, -1), scene);
-        // light1.diffuse = new BABYLON.Color3(1, 1, 1);
-        // light1.specular = new BABYLON.Color3(1, 1, 1);
-        light1.intensity = 7;
-        light1.position = new BABYLON.Vector3(0, 100, 10);
+        let directionalLight = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, -1), scene);
+        // directionalLight.diffuse = new BABYLON.Color3(1, 1, 1);
+        // directionalLight.specular = new BABYLON.Color3(1, 1, 1);
+        directionalLight.intensity = 7;
+        directionalLight.position = new BABYLON.Vector3(0, 100, 10);
 
         let light2 = new BABYLON.HemisphericLight("HemisphericLight", new BABYLON.Vector3(1, 1, 0), scene);
         light2.intensity = 0.5;
 
-        shadowGenerator = new BABYLON.ShadowGenerator(1024, light1);
+        shadowGenerator = new BABYLON.ShadowGenerator(1024, directionalLight);
+    }
+
+    function setTimeOfDay() {
+        // https://playground.babylonjs.com/#E6OZX#221
+        function setSkyConfig() {
+            var keys = [
+                { frame: 0, value: from },
+                { frame: 100, value: to }
+            ];
+            
+            var animation = new BABYLON.Animation("animation", property, 100, BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            animation.setKeys(keys);
+            
+            scene.stopAnimation(skybox);
+            scene.beginDirectAnimation(skybox, [animation], 0, 100, false, 1);
+        }
+
+        function setDirectionalLightConfig() {
+
+        }
     }
 
 

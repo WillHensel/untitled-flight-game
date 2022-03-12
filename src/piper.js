@@ -7,11 +7,17 @@ async function importAndSetupPiper(scene) {
     let piperProp;
 
     let piperRutter;
+    let piperElevator;
     let piperAileronPilot;
     let piperAileronPass;
     let piperPositionLightRight;
     let piperPositionLightLeft;
     let piperPositionLightTail;
+
+    let initialElevatorRotation;
+    let initialRutterRotation;
+    let initialAileronPassRotation;
+    let initialAileronPilotRotation;
 
     function setupInitialTranslations() {
         piperRutter.translate(new BABYLON.Vector3(1.75, -0.4, 0), 1, BABYLON.Space.WORLD);
@@ -22,9 +28,17 @@ async function importAndSetupPiper(scene) {
         piperPositionLightRight.translate(new BABYLON.Vector3(1.75, -0.4, 0), 1, BABYLON.Space.WORLD);
         piperPositionLightLeft.translate(new BABYLON.Vector3(1.75, -0.4, 0), 1, BABYLON.Space.WORLD);
         piperPositionLightTail.translate(new BABYLON.Vector3(1.75, -0.4, 0), 1, BABYLON.Space.WORLD);
+
         
-        piperBody.addRotation(0, Math.PI / 2, -Math.PI / 15);
+        piperBody.addRotation(0, Math.PI / 2,  -Math.PI / 15);
+        
         piperBody.translate(new BABYLON.Vector3(0, 20, 2), BABYLON.Space.WORLD);
+
+        initialElevatorRotation = piperElevator.rotation.z;
+        initialRutterRotation = piperRutter.rotation.z;
+        initialAileronPassRotation = piperAileronPass.rotation.z;
+        initialAileronPilotRotation = piperAileronPilot.rotation.z;
+      
     }
 
     function setupLights() {
@@ -43,8 +57,15 @@ async function importAndSetupPiper(scene) {
         positionLightRedWing.parent = piperPositionLightLeft;
         positionLightGreen.parent = piperPositionLightRight;
         positionLightRedTail.parent = piperPositionLightTail;
+    }
 
-        // shadowGenerator.getShadowMap().renderList.push(piperBody);
+    function setupAudio() {
+        let engineNoise = new BABYLON.Sound("EngineSound", "../audio/engine.wav", scene, null, {
+            loop: true,
+            autoplay: true,
+            spatialSound: true,
+        });
+        engineNoise.attachToMesh(piperBody);
     }
 
     function setupAnimations() {
@@ -53,9 +74,29 @@ async function importAndSetupPiper(scene) {
             if (rotation > 2) {
                 rotation = 0;
             }
-            piperProp.rotation = new BABYLON.Vector3(rotation * Math.PI, 0, 0);
+            piperProp.rotation = new BABYLON.Vector3(rotation * Math.PI, 0, 0 );
             rotation += 0.2;
         });
+    }
+
+    function resetControlSurfacePosition(mesh, property, from, to, reverse) {
+        let keys = [
+            {frame: 0, value: from},
+            {frame: 100, value: to}
+        ];
+
+        let animation = new BABYLON.Animation("ResetControlSurface", property, 100,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+
+        animation.setKeys(keys);
+
+        scene.stopAnimation(mesh);
+        if (reverse) {
+            scene.beginDirectAnimation(mesh, [animation], 100, 0, false, 1);
+        } else {
+            scene.beginDirectAnimation(mesh, [animation], 0, 100, false, 1);
+        }
+
     }
 
     function setupControlSurfaceInput() {
@@ -76,7 +117,7 @@ async function importAndSetupPiper(scene) {
                                 piperElevator.addRotation(0, 0, -rotationOffset);
                                 elevatorRotationCounter -= rotationOffset;
                             }
-                            piperBody.addRotation(0, 0, rotationOffset)
+                            piperBody.addRotation(0, 0, rotationOffset);
                             break;
                         case "s":
                         case "S":
@@ -126,20 +167,33 @@ async function importAndSetupPiper(scene) {
                     break;
                 // TODO return to origin animations
                 case BABYLON.KeyboardEventTypes.KEYUP:
-                    // case "w":
-                    // case "W":
-                    //     while (elevatorRotationCounter != 0) {
-                    //         piperElevator.addRotation(0, 0, -elevatorRotationOffset);
-                    //         elevatorRotationCounter -= elevatorRotationOffset;
-                    //         elevatorRotationCounter = Math.round(elevatorRotationCounter * 10) / 10;
-                    //     }
-                    //     console.log(elevatorRotationCounter);
-                    //     break;
-                    // case "s":
-                    // case "S":
-                    //     break;
+                    switch (kbInfo.event.key) {
+                    case "w":
+                    case "W":
+                    case "s":
+                    case "S":
+                        piperElevator.rotation.z = initialElevatorRotation;
+                        elevatorRotationCounter = 0;
+                        break;
+                    case "q":
+                    case "Q":
+                    case "e":
+                    case "E":
+                        piperRutter.rotation.z = initialRutterRotation;
+                        rutterRotationCounter = 0;
+                        break;
+                    case "a":
+                    case "A":
+                    case "d":
+                    case "D":
+                        piperAileronPass.rotation.z = initialAileronPassRotation;
+                        piperAileronPilot.rotation.z = initialAileronPilotRotation;
+                        aileronRotationCounter = 0;
+                        break;
                 default:
                     break;
+                }
+                break;
             }
 
 
@@ -175,6 +229,7 @@ async function importAndSetupPiper(scene) {
     setupControlSurfaceInput();
     setupLights();
     setupAnimations();
+    setupAudio();
 
     return piperBody;
 }
