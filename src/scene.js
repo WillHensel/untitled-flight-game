@@ -39,13 +39,13 @@ async function createScene() {
     }
 
     function setupInternalClock() {
-        timeSelected = +new Date();
+        timeSelected = +new Date(2022, 2, 11, 15);
         timeNow = timeSelected;
         let timeStarted = +new Date();
         scene.registerBeforeRender(function() {
             let delta = +new Date() - timeStarted;
             if (delta >= 1000) {
-                timeNow = timeSelected + delta;
+                timeNow = timeSelected + delta * 5000;
             }        
         });
 
@@ -55,8 +55,9 @@ async function createScene() {
     setupScene();
     setupInternalClock();
     setupCamera();
-    setupEnvironment(scene);
     piperBody = await importAndSetupPiper(scene, camera);
+    setupEnvironment(scene);
+
     setupPiperMovement();
     setupUI();
 

@@ -94,22 +94,39 @@ function setupEnvironment(scene) {
             if (!evening) {
                 x = 1 - x;
             }
+            // console.log(x);
             skyMaterial.inclination = x;
             skybox.position = piperBody.position;
         });
     }
 
     function setupLights() {
+        let height = 20;
         let directionalLight = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, -1), scene);
         // directionalLight.diffuse = new BABYLON.Color3(1, 1, 1);
         // directionalLight.specular = new BABYLON.Color3(1, 1, 1);
         directionalLight.intensity = 7;
-        directionalLight.position = new BABYLON.Vector3(0, 100, 10);
-
-        let light2 = new BABYLON.HemisphericLight("HemisphericLight", new BABYLON.Vector3(1, 1, 0), scene);
-        light2.intensity = 0.5;
+        directionalLight.position = new BABYLON.Vector3(0, height, 0);
 
         shadowGenerator = new BABYLON.ShadowGenerator(1024, directionalLight);
+
+        // let meshIndicator = new BABYLON.MeshBuilder.CreateSphere("Indicator", {diameter: 8}, scene);
+
+        scene.registerBeforeRender(function() {
+            
+            let angle = skyMaterial.inclination * Math.PI * -1;
+            if (skyMaterial.inclination > 0.6 || skyMaterial.inclination < -0.6) {
+                directionalLight.intensity = 0;
+            } else {
+                directionalLight.intensity = 7;
+            }
+            directionalLight.direction.z = -height * Math.sin(angle);
+            directionalLight.direction.y = -height * Math.cos(angle);
+            directionalLight.position.z = piperBody.position.z + height * Math.sin(angle);
+            directionalLight.position.y = piperBody.position.y + height * Math.cos(angle);
+
+            // meshIndicator.position = directionalLight.position;
+        });
     }
 
     function setTimeOfDay() {

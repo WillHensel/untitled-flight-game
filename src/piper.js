@@ -45,14 +45,17 @@ async function importAndSetupPiper(scene) {
         let positionLightRedWing = new BABYLON.PointLight("PositionLightRedWing", piperPositionLightLeft.position, scene);
         positionLightRedWing.diffuse = new BABYLON.Color3(0.8, 0.011, 0.008);
         positionLightRedWing.specular = new BABYLON.Color3(0.8, 0.011, 0.008);
+        positionLightRedWing.intensity = 0.25;
 
         let positionLightRedTail = new BABYLON.PointLight("PositionLightRedTail", piperPositionLightTail.position, scene);
         positionLightRedTail.diffuse = new BABYLON.Color3(0.8, 0.011, 0.008);
         positionLightRedTail.specular = new BABYLON.Color3(0.8, 0.011, 0.008);
+        positionLightRedTail.intensity = 0.25;
 
         let positionLightGreen = new BABYLON.PointLight("PositionLightGreen", piperPositionLightRight.position, scene);
         positionLightGreen.diffuse = new BABYLON.Color3(0.004, 0.8, 0.0);
         positionLightGreen.specular = new BABYLON.Color3(0.004, 0.8, 0.0);
+        positionLightGreen.intensity = 0.25;
 
         positionLightRedWing.parent = piperPositionLightLeft;
         positionLightGreen.parent = piperPositionLightRight;
