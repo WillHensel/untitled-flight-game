@@ -17,7 +17,7 @@ async function createScene() {
         camera.rotationOffset = 0;
         camera.cameraAcceleration = 0.5;
         camera.maxCameraSpeed = 100;
-        camera.attachControl(canvas, true);
+        camera.attachControl(canvas, false);
         camera.checkCollisions = true;
 
         cameraAttachment = BABYLON.MeshBuilder.CreateBox("CameraAttachment", {}, 0);
@@ -59,7 +59,7 @@ async function createScene() {
     setupEnvironment(scene);
 
     setupPiperMovement();
-    setupUI();
+    setupUI(scene);
 
     return scene;
 };
