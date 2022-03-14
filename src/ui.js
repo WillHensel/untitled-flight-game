@@ -12,6 +12,23 @@ function setupUI(scene) {
         timeIndicator.paddingLeft = 20;
         timeIndicator.paddingBottom = 20;
         advancedTexture.addControl(timeIndicator);
+
+        let timeMultiplierButton = BABYLON.GUI.Button.CreateSimpleButton("TimeMultiplierButton", "1x");
+        timeMultiplierButton.width = "100px";
+        timeMultiplierButton.height = "52px";
+        timeMultiplierButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+        timeMultiplierButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+        timeMultiplierButton.paddingRight = 20;
+        timeMultiplierButton.paddingBottom = 20;
+        timeMultiplierButton.background = "#4DA6FF";
+        timeMultiplierButton.onPointerClickObservable.add(function() {
+            timeMultiplier *= 10;
+            if (timeMultiplier == 100000) {
+                timeMultiplier = 1;
+            }
+            timeMultiplierButton.textBlock.text = timeMultiplier + 'x';
+        });
+        advancedTexture.addControl(timeMultiplierButton);
         
         scene.registerBeforeRender(function() {
             let time = new Date(timeNow);

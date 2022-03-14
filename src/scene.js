@@ -1,7 +1,7 @@
 // timeSelected: Time selected through GUI, defaults to real time when the game launches.
 // timeNow: Time selected + amount of time passed since selection was made.
 //          Should be zeroed when a change is made to timeSelected.
-let timeSelected, timeNow, piperBody, terrain;
+let timeSelected, timeNow, timeMultiplier, piperBody, terrain;
 
 async function createScene() {
     let scene, camera, shadowGenerator;
@@ -50,13 +50,16 @@ async function createScene() {
     }
 
     function setupInternalClock() {
-        timeSelected = +new Date(2022, 2, 13, 15);
+        timeSelected = +new Date();
         timeNow = timeSelected;
+        timeMultiplier = 1;
         let timeStarted = +new Date();
         scene.registerBeforeRender(function() {
             let delta = +new Date() - timeStarted;
+            delta *= timeMultiplier;
             if (delta >= 1000) {
-                timeNow = timeSelected + delta;// * 5000;
+                timeStarted = +new Date();
+                timeNow += delta;
             }        
         });
 
@@ -71,7 +74,6 @@ async function createScene() {
     setupPiperMovement();
     setupUI(scene);
 
-    setupPiperGroundCollision();
 
     return scene;
 };
