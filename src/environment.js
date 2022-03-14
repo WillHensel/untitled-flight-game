@@ -115,7 +115,7 @@ function setupEnvironment(scene) {
         scene.registerBeforeRender(function() {
             
             let angle = skyMaterial.inclination * Math.PI * -1;
-            if (skyMaterial.inclination > 0.6 || skyMaterial.inclination < -0.6) {
+            if (skyMaterial.inclination > 0.55 || skyMaterial.inclination < -0.55) {
                 directionalLight.intensity = 0;
             } else {
                 directionalLight.intensity = 7;
@@ -130,16 +130,11 @@ function setupEnvironment(scene) {
     }
 
     function generateClouds() {
-        // cloud object
-        // {
-        //      cloudInstance,
-        //      Vector3 position
-        // }
         let cloudSpriteManager = new BABYLON.SpriteManager("CloudsManager", "../textures/cloud.png", 2000, {width: 256, height: 256});
         let clouds = [];
         let maxCloudInArea = 100;
-        let minCloudSize = 50;
-        let maxCloudSize = 200;
+        let minCloudSize = 100;
+        let maxCloudSize =500;
         let maxCloudDistance = 2500;
         let maxCloudRadius = 2000;
         let minCloudHeight = 250;
@@ -147,15 +142,12 @@ function setupEnvironment(scene) {
 
         scene.registerBeforeRender(function () {
             let cloudsToKeep = [];
-            let piperPosition = piperBody.position.clone();
+
             let currentTime = new Date(timeNow);
             currentTime = currentTime.getHours() + currentTime.getMinutes() / 60;
             currentTime /= 24;
 
-            function changeCloudColor(cloud) {
-
-            }
-
+            let piperPosition = piperBody.position.clone();
             piperPosition.y = 0;
 
             clouds.forEach((cloud) => {
@@ -180,31 +172,31 @@ function setupEnvironment(scene) {
                     cloud.color.b = (currentTime - 0.22) / 0.13;
                 }
             });
-            if (cloudsToKeep.length < maxCloudInArea) {
+            while (cloudsToKeep.length < maxCloudInArea) {
                 let pickTheta = Math.random() * 360 * Math.PI / 180; // Left unsimplified for integer to float conversion
-                let pickZ = piperPosition.z + maxCloudRadius * Math.sin(pickTheta);
-                let pickX = piperPosition.x + maxCloudRadius * Math.cos(pickTheta);
+                let pickZ = piperPosition.z + maxCloudRadius * Math.cos(pickTheta);
+                let pickX = piperPosition.x + maxCloudRadius * Math.sin(pickTheta);
                 let pickY = Math.random() * (maxCloudHeight - minCloudHeight) + minCloudHeight;
                 let pickWidth = Math.random() * (maxCloudSize - minCloudSize) + minCloudSize;
                 let pickHeight = pickWidth;
                 let newCloud = new BABYLON.Sprite("Cloud" + (cloudsToKeep.length + 1), cloudSpriteManager);
-                newCloud.position = new BABYLON.Vector3(piperPosition.x + pickX, pickY, piperPosition.z + pickZ);
+                newCloud.position = new BABYLON.Vector3(pickX, pickY,pickZ);
                 newCloud.width = pickWidth;
                 newCloud.height = pickHeight;
-                if (currentTime > 0.65 && currentTime < 0.78) {
+                if (currentTime > 0.65) {
                     newCloud.color.r = 1 - (currentTime - 0.65) / 0.13;
                     newCloud.color.g = 1 - (currentTime - 0.65) / 0.13;
                     newCloud.color.b = 1 - (currentTime - 0.65) / 0.13;
                 }
-                else if(currentTime > 0.22 && currentTime < 0.35) {
+                else if(currentTime < 0.35) {
                     newCloud.color.r = (currentTime - 0.22) / 0.13;
                     newCloud.color.g = (currentTime - 0.22) / 0.13;
                     newCloud.color.b = (currentTime - 0.22) / 0.13;
                 }
                 cloudsToKeep.push(newCloud);
             }
-            clouds = cloudsToKeep;
 
+            clouds = cloudsToKeep;
 
         });
 

@@ -39,13 +39,13 @@ async function createScene() {
     }
 
     function setupInternalClock() {
-        timeSelected = +new Date();
+        timeSelected = +new Date(2022, 2, 13, 15);
         timeNow = timeSelected;
         let timeStarted = +new Date();
         scene.registerBeforeRender(function() {
             let delta = +new Date() - timeStarted;
             if (delta >= 1000) {
-                timeNow = timeSelected + delta * 5000;
+                timeNow = timeSelected + delta;// * 5000;
             }        
         });
 
