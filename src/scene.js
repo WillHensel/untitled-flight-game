@@ -1,10 +1,12 @@
 // timeSelected: Time selected through GUI, defaults to real time when the game launches.
 // timeNow: Time selected + amount of time passed since selection was made.
 //          Should be zeroed when a change is made to timeSelected.
-let timeSelected, timeNow, piperBody;
+let timeSelected, timeNow, piperBody, terrain;
 
 async function createScene() {
-    let scene, camera, shadowGenerator
+    let scene, camera, shadowGenerator;
+
+
 
     function setupScene() {
         scene = new BABYLON.Scene(engine);
@@ -34,7 +36,16 @@ async function createScene() {
 
     function setupPiperMovement() {
         scene.registerBeforeRender(function() {
-            piperBody.translate(new BABYLON.Vector3(-1, 0, 0), 1, BABYLON.Space.LOCAL);
+            let terrainHeight = terrain.getHeightFromMap(piperBody.position.x, piperBody.position.z);
+            if (piperBody.position.y <= terrainHeight) {
+                piperBody.dispose();
+                engine.dispose();
+                scene.dispose();
+
+                init();
+            } else {
+                piperBody.translate(new BABYLON.Vector3(-1, 0, 0), 1, BABYLON.Space.LOCAL);
+            }
         });
     }
 
@@ -50,7 +61,6 @@ async function createScene() {
         });
 
     }
-
     
     setupScene();
     setupInternalClock();
@@ -60,6 +70,8 @@ async function createScene() {
 
     setupPiperMovement();
     setupUI(scene);
+
+    setupPiperGroundCollision();
 
     return scene;
 };

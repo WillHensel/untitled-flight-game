@@ -56,7 +56,7 @@ function setupEnvironment(scene) {
             mapColors: mapColors,
             terrainSub: terrainSub
         }
-        let terrain = new BABYLON.DynamicTerrain("Terrain", params, scene);
+        terrain = new BABYLON.DynamicTerrain("Terrain", params, scene);
 
         let terrainMaterial = new BABYLON.StandardMaterial("TerrainMaterial", scene);
         terrainMaterial.specularColor = BABYLON.Color3.Black();
@@ -69,7 +69,7 @@ function setupEnvironment(scene) {
         terrainMaterial.diffuseTexture = terrainTexture;
 
         terrain.initialLOD = 10;
-        terrain.mesh.checkCollisions = true;
+        // terrain.mesh.checkCollisions = true;
         terrain.receiveShadows = true
         terrain.update(true);
 
@@ -135,9 +135,9 @@ function setupEnvironment(scene) {
         let maxCloudInArea = 100;
         let minCloudSize = 100;
         let maxCloudSize =500;
-        let maxCloudDistance = 2500;
-        let maxCloudRadius = 2000;
-        let minCloudHeight = 250;
+        let maxCloudDistance = 1300;
+        let maxCloudRadius = 1200;
+        let minCloudHeight = 175;
         let maxCloudHeight = 1500;
 
         scene.registerBeforeRender(function () {
@@ -151,14 +151,24 @@ function setupEnvironment(scene) {
             piperPosition.y = 0;
 
             clouds.forEach((cloud) => {
+
                 let cloudPosition = cloud.position.clone();
                 cloudPosition.y = 0;
 
                 let distance = BABYLON.Vector3.Distance(piperPosition, cloudPosition);
                 if (distance < maxCloudDistance) {
                     cloudsToKeep.push(cloud);
+                    if (cloud.color.a < 1) {
+                        cloud.color.a += 0.1;
+                    }
+    
                 } else {
-                    cloud.dispose();
+                    if (cloud.color.a > 0) {
+                        cloudsToKeep.push(cloud);
+                        cloud.color.a -= 0.1;
+                    } else {
+                        cloud.dispose();                    
+                    }
                 }
 
                 let currentColor = cloud.color;
@@ -193,6 +203,8 @@ function setupEnvironment(scene) {
                     newCloud.color.g = (currentTime - 0.22) / 0.13;
                     newCloud.color.b = (currentTime - 0.22) / 0.13;
                 }
+
+                newCloud.color.a = 0;
                 cloudsToKeep.push(newCloud);
             }
 

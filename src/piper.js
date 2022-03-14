@@ -226,7 +226,8 @@ async function importAndSetupPiper(scene) {
     piperPositionLightLeft.parent = piperBody;
     piperPositionLightTail.parent = piperBody;
 
-    piperBody.checkCollisions = true;
+    // piperBody.checkCollisions = true;
+    piperBody.actionManager = new BABYLON.ActionManager(scene);
 
     setupInitialTranslations();
     setupControlSurfaceInput();

@@ -9,7 +9,7 @@ Exporter version: 2.93.5, Blender version: 2.93.8
 		Vert Color Precision:  3
 		Mat Weight Precision:  2
 		Keep Z-up r-handed  :  no
-		Texture directory   :  /home/will/Documents/FInal Project/Piper/
+		Texture directory   :  /mnt/home/WWU/CPTR/CPTR355/FInal Project/Piper/
 	Python World class constructor completed
 	WARNING: No active camera has been assigned, or is not in a currently enabled collection
 	processing begun of mesh:  Body
@@ -103,15 +103,6 @@ Exporter version: 2.93.5, Blender version: 2.93.8
 		num uvs2           :  0
 		num colors         :  0
 		num triangles      :  960
-	processing begun of mesh:  Physics Imposter
-		WARNING: No materials have been assigned: 
-		num positions      :  29
-		num normals        :  29
-		num tangents       :  0
-		num uvs            :  58
-		num uvs2           :  0
-		num colors         :  0
-		num triangles      :  12
 ========= Writing of JSON file started =========
 	writing mesh:  Body
 	writing mesh:  Elevator
@@ -122,7 +113,6 @@ Exporter version: 2.93.5, Blender version: 2.93.8
 	writing mesh:  Position Light Green
 	writing mesh:  Position Light Red
 	writing mesh:  Position Light Tail
-	writing mesh:  Physics Imposter
 ========= Writing of JSON file completed =========
 ========= end of processing =========
-elapsed time:  0 min, 0.5788 secs
+elapsed time:  0 min, 0.399 secs
