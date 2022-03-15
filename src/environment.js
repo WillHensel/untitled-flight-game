@@ -69,7 +69,6 @@ function setupEnvironment(scene) {
         terrainMaterial.diffuseTexture = terrainTexture;
 
         terrain.initialLOD = 10;
-        // terrain.mesh.checkCollisions = true;
         terrain.receiveShadows = true
         terrain.update(true);
 
@@ -102,15 +101,11 @@ function setupEnvironment(scene) {
 
     function setupLights() {
         let height = 20;
-        let directionalLight = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, -1), scene);
-        // directionalLight.diffuse = new BABYLON.Color3(1, 1, 1);
-        // directionalLight.specular = new BABYLON.Color3(1, 1, 1);
+        directionalLight = new BABYLON.DirectionalLight("DirectionalLight", new BABYLON.Vector3(0, -1, -1), scene);
         directionalLight.intensity = 7;
         directionalLight.position = new BABYLON.Vector3(0, height, 0);
 
         shadowGenerator = new BABYLON.ShadowGenerator(1024, directionalLight);
-
-        // let meshIndicator = new BABYLON.MeshBuilder.CreateSphere("Indicator", {diameter: 8}, scene);
 
         scene.registerBeforeRender(function() {
             
@@ -125,7 +120,6 @@ function setupEnvironment(scene) {
             directionalLight.position.z = piperBody.position.z + height * Math.sin(angle);
             directionalLight.position.y = piperBody.position.y + height * Math.cos(angle);
 
-            // meshIndicator.position = directionalLight.position;
         });
     }
 

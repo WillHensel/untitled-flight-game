@@ -1,6 +1,10 @@
 var canvas = null;
 var engine = null;
 
+function sleep(milliseconds) {  
+    return new Promise(resolve => setTimeout(resolve, milliseconds));  
+ }  
+
 async function init() {
     canvas = document.getElementById("renderCanvas");
     engine = new BABYLON.Engine(

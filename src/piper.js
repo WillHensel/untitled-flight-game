@@ -82,26 +82,6 @@ async function importAndSetupPiper(scene) {
         });
     }
 
-    function resetControlSurfacePosition(mesh, property, from, to, reverse) {
-        let keys = [
-            {frame: 0, value: from},
-            {frame: 100, value: to}
-        ];
-
-        let animation = new BABYLON.Animation("ResetControlSurface", property, 100,
-            BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-
-        animation.setKeys(keys);
-
-        scene.stopAnimation(mesh);
-        if (reverse) {
-            scene.beginDirectAnimation(mesh, [animation], 100, 0, false, 1);
-        } else {
-            scene.beginDirectAnimation(mesh, [animation], 0, 100, false, 1);
-        }
-
-    }
-
     function setupControlSurfaceInput() {
         let rotationOffset = Math.PI / 36;
         let rotationLimit = Math.PI / 3;
@@ -168,7 +148,6 @@ async function importAndSetupPiper(scene) {
                             break;
                     }
                     break;
-                // TODO return to origin animations
                 case BABYLON.KeyboardEventTypes.KEYUP:
                     switch (kbInfo.event.key) {
                     case "w":
@@ -203,6 +182,26 @@ async function importAndSetupPiper(scene) {
         });
     }
 
+    function setupCrashParticleEmitter() {
+        let crashParticleSystem = new BABYLON.ParticleSystem("CrashParticles", 20, scene);
+        crashParticleSystem.particleTexture = new BABYLON.Texture("../textures/fire-particle-large.png");
+        crashParticleSystem.emitter = piperBody;
+
+        let crashSubSystem = new BABYLON.ParticleSystem("CrashParticlesSub", 2, scene);
+        crashSubSystem.particleTexture = new BABYLON.Texture("../textures/fire-particle-sub.png");
+        let crashSubEmitter = new BABYLON.SubEmitter(crashSubSystem);
+        crashSubEmitter.type = BABYLON.SubEmitterType.END;
+        crashSubEmitter.inheritDirection = true;
+        crashSubEmitter.inheritedVelocityAmount = 10;
+
+        crashParticleSystem.subEmitters = [crashSubEmitter];
+
+        crashParticleSystem.emitRate = 20;
+        crashParticleSystem.minEmitBox = new BABYLON.Vector3(-5, 0, -3);
+        crashParticleSystem.maxEmitBox = new BABYLON.Vector3(5, 0, 3);
+
+        return crashParticleSystem;
+    }
 
     let result = await BABYLON.SceneLoader.ImportMeshAsync("", "Piper/", "Piper_J3.babylon", scene);
     let meshes = result.meshes;
@@ -226,14 +225,13 @@ async function importAndSetupPiper(scene) {
     piperPositionLightLeft.parent = piperBody;
     piperPositionLightTail.parent = piperBody;
 
-    // piperBody.checkCollisions = true;
-    piperBody.actionManager = new BABYLON.ActionManager(scene);
-
     setupInitialTranslations();
     setupControlSurfaceInput();
     setupLights();
     setupAnimations();
     setupAudio();
+    piperBody.crashParticleSystem = setupCrashParticleEmitter();
+
 
     return piperBody;
 }

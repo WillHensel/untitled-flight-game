@@ -38,11 +38,13 @@ async function createScene() {
         scene.registerBeforeRender(function() {
             let terrainHeight = terrain.getHeightFromMap(piperBody.position.x, piperBody.position.z);
             if (piperBody.position.y <= terrainHeight) {
-                piperBody.dispose();
-                engine.dispose();
-                scene.dispose();
-
-                init();
+                piperBody.crashParticleSystem.start();
+                sleep(10 * 1000).then(() => {
+                    piperBody.dispose();
+                    scene.dispose();
+                    engine.dispose();
+                    init();    
+                })
             } else {
                 piperBody.translate(new BABYLON.Vector3(-1, 0, 0), 1, BABYLON.Space.LOCAL);
             }

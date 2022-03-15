@@ -1,0 +1,4 @@
+- Crash particles
+- Shadows casted to ground (Plane and clouds)
+- Music
+- Cloud generation only infront of the plane
