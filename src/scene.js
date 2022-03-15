@@ -4,7 +4,7 @@
 let timeSelected, timeNow, timeMultiplier, piperBody, terrain;
 
 async function createScene() {
-    let scene, camera, shadowGenerator;
+    let scene, camera;
 
 
 
@@ -51,6 +51,11 @@ async function createScene() {
         });
     }
 
+    function setupPiperEnvironmentInteraction() {
+        shadowGenerator.getShadowMap().renderList.push(piperBody);
+        terrain.mesh.receiveShadows = true;
+    }
+
     function setupInternalClock() {
         timeSelected = +new Date();
         timeNow = timeSelected;
@@ -72,8 +77,8 @@ async function createScene() {
     setupCamera();
     piperBody = await importAndSetupPiper(scene, camera);
     setupEnvironment(scene);
-
     setupPiperMovement();
+    setupPiperEnvironmentInteraction();
     setupUI(scene);
 
 

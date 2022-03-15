@@ -1,4 +1,6 @@
 
+let shadowGenerator;
+
 function setupEnvironment(scene) {
     let directionalLight, skyMaterial
 
