@@ -66,9 +66,10 @@ async function importAndSetupPiper(scene) {
         let engineNoise = new BABYLON.Sound("EngineSound", "../audio/engine.wav", scene, null, {
             loop: true,
             autoplay: true,
-            spatialSound: true,
+            length: 6,
+            offset: 1,
+            volume: 0.5
         });
-        engineNoise.attachToMesh(piperBody);
     }
 
     function setupAnimations() {

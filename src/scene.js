@@ -6,8 +6,6 @@ let timeSelected, timeNow, timeMultiplier, piperBody, terrain;
 async function createScene() {
     let scene, camera;
 
-
-
     function setupScene() {
         scene = new BABYLON.Scene(engine);
         scene.collisionsEnabled = true;
@@ -71,6 +69,14 @@ async function createScene() {
         });
 
     }
+
+    function setupMusic() {
+        let music = new BABYLON.Sound("Music", "../audio/music.mp3", scene, null, {
+            loop: true,
+            autoplay: true,
+            length: 106,
+        });
+    }
     
     setupScene();
     setupInternalClock();
@@ -80,6 +86,7 @@ async function createScene() {
     setupPiperMovement();
     setupPiperEnvironmentInteraction();
     setupUI(scene);
+    setupMusic();
 
 
     return scene;

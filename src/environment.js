@@ -201,6 +201,7 @@ function setupEnvironment(scene) {
                 }
 
                 newCloud.color.a = 0;
+
                 cloudsToKeep.push(newCloud);
             }
 
