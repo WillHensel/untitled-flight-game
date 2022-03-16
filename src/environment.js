@@ -112,7 +112,7 @@ function setupEnvironment(scene) {
         scene.registerBeforeRender(function() {
             
             let angle = skyMaterial.inclination * Math.PI * -1;
-            if (skyMaterial.inclination > 0.55 || skyMaterial.inclination < -0.55) {
+            if (skyMaterial.inclination > 0.45 || skyMaterial.inclination < -0.45) {
                 directionalLight.intensity = 0;
             } else {
                 directionalLight.intensity = 7;
