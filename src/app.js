@@ -1,3 +1,4 @@
+var rootDir = location.origin + location.pathname;
 var canvas = null;
 var engine = null;
 
@@ -6,7 +7,6 @@ function sleep(milliseconds) {
  }  
 
 async function init() {
-    alert(location.pathname)
     canvas = document.getElementById("renderCanvas");
     engine = new BABYLON.Engine(
         canvas,
