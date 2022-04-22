@@ -1,3 +1,4 @@
+var rootDir = location.origin + location.pathname;
 var canvas = null;
 var engine = null;
 

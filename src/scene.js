@@ -71,7 +71,7 @@ async function createScene() {
     }
 
     function setupMusic() {
-        let music = new BABYLON.Sound("Music", "../audio/music.mp3", scene, null, {
+        let music = new BABYLON.Sound("Music", rootDir + "audio/music.mp3", scene, null, {
             loop: true,
             autoplay: true,
             length: 106,
