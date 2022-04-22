@@ -63,7 +63,7 @@ async function importAndSetupPiper(scene) {
     }
 
     function setupAudio() {
-        let engineNoise = new BABYLON.Sound("EngineSound", rootDir + "../audio/engine.wav", scene, null, {
+        let engineNoise = new BABYLON.Sound("EngineSound", rootDir + "audio/engine.wav", scene, null, {
             loop: true,
             autoplay: true,
             length: 6,
@@ -185,11 +185,11 @@ async function importAndSetupPiper(scene) {
 
     function setupCrashParticleEmitter() {
         let crashParticleSystem = new BABYLON.ParticleSystem("CrashParticles", 20, scene);
-        crashParticleSystem.particleTexture = new BABYLON.Texture(rootDir + "../textures/fire-particle-large.png");
+        crashParticleSystem.particleTexture = new BABYLON.Texture(rootDir + "textures/fire-particle-large.png");
         crashParticleSystem.emitter = piperBody;
 
         let crashSubSystem = new BABYLON.ParticleSystem("CrashParticlesSub", 2, scene);
-        crashSubSystem.particleTexture = new BABYLON.Texture(rootDir + "../textures/fire-particle-sub.png");
+        crashSubSystem.particleTexture = new BABYLON.Texture(rootDir + "textures/fire-particle-sub.png");
         let crashSubEmitter = new BABYLON.SubEmitter(crashSubSystem);
         crashSubEmitter.type = BABYLON.SubEmitterType.END;
         crashSubEmitter.inheritDirection = true;

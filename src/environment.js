@@ -67,7 +67,7 @@ function setupEnvironment(scene) {
         terrainMaterial.specularColor = new BABYLON.Color3(0.01, 0.02, 0.005);
         terrainMaterial.ambientColor = new BABYLON.Color3(0.8, 1, 0.6);
 
-        let terrainTexture = new BABYLON.Texture(rootDir + '../textures/grass.png',scene);
+        let terrainTexture = new BABYLON.Texture(rootDir + 'textures/grass.png',scene);
         terrainMaterial.diffuseTexture = terrainTexture;
 
         terrain.initialLOD = 10;
@@ -126,7 +126,7 @@ function setupEnvironment(scene) {
     }
 
     function generateClouds() {
-        let cloudSpriteManager = new BABYLON.SpriteManager("CloudsManager", rootDir + "../textures/cloud.png", 2000, {width: 256, height: 256});
+        let cloudSpriteManager = new BABYLON.SpriteManager("CloudsManager", rootDir + "textures/cloud.png", 2000, {width: 256, height: 256});
         let clouds = [];
         let maxCloudInArea = 100;
         let minCloudSize = 100;
